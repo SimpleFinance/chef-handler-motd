@@ -29,7 +29,7 @@ chef_handler 'ChefMOTD' do
 end
 ```
 
-## Arguments
+### Arguments
 * `priority` - Determines where the Chef data is displayed in MOTD (default 05)
 
 # Author
