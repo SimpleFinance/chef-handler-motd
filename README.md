@@ -1,4 +1,4 @@
-# Chef-handler-motd
+# ChefMOTD handler
 Update your MOTD after a Chef run with various data
 
 # Usage
