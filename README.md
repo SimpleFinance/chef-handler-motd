@@ -1,6 +1,9 @@
 # ChefMOTD handler
 Update your MOTD after a Chef run with various data
 
+# Prerequisites
+Mostly, just having MOTD configured. We use Estately's [motd](https://github.com/estately/cookbooks/tree/master/motd) cookbook
+
 # Usage
 Either just pull the handler file into a files directory of one of your
 cookbooks, or download as a Rubygem and source it that way.
