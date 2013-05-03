@@ -33,7 +33,7 @@ class ChefMOTD < Chef::Handler
     def report
       msg = <<-eos
 #!/bin/sh
-echo \"Node #{node.name} last success: #{Time.now.to_s} in #{run_status.elapsed_time}\"
+echo \"Node #{node.name} last success at #{Time.now.to_s} in #{run_status.elapsed_time} seconds\"
 echo \"Updated resources on last run (total: #{run_status.updated_resources.length}):\"
       eos
       run_status.updated_resources.each do |res|
@@ -42,7 +42,7 @@ echo \"Updated resources on last run (total: #{run_status.updated_resources.leng
       if run_status.success?
         Chef::Log.info 'Updating Chef info in MOTD ...'
         file = "/etc/update-motd.d/#{@priority}-chef-motd"
-        f = ::File.open(file, 'w') {|f| f.puts msg}
+        ::File.open(file, 'w') {|f| f.puts msg}
         ::File.chmod(0755, file)
       end
     end
