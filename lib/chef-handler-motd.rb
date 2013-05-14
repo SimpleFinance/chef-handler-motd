@@ -30,7 +30,22 @@ class ChefMOTD < Chef::Handler
       @priority = options[:priority]
     end
 
-    def report
+    def delete_outdated
+      Dir.entries('.').select do |entry|
+        /chef-motd/.match entry && !/^#{@priority}/.match entry
+      end.each do |del|
+        Chef::Log.warn "Deleting #{del} as it does not match the current ChefMOTD priority"
+        FileUtils.rm ::File.join('/etc', 'update-motd.d', del)
+      end
+    end
+
+    def write_out(msg)
+      file = "/etc/update-motd.d/#{@priority}-chef-motd"
+      ::File.open(file, 'w') {|f| f.puts msg}
+      ::File.chmod(0755, file)
+    end
+
+    def generate_message
       msg = <<-eos
 #!/bin/sh
 echo \"Node #{node.name} last success at #{Time.now.to_s} in #{run_status.elapsed_time} seconds\"
@@ -39,11 +54,14 @@ echo \"Updated resources on last run (total: #{run_status.updated_resources.leng
       run_status.updated_resources.each do |res|
         msg += "echo \"  #{res.resource_name}[#{res.name}]\"\n"
       end
+      return msg
+    end
+
+    def report
       if run_status.success?
         Chef::Log.info 'Updating Chef info in MOTD ...'
-        file = "/etc/update-motd.d/#{@priority}-chef-motd"
-        ::File.open(file, 'w') {|f| f.puts msg}
-        ::File.chmod(0755, file)
+        delete_outdated
+        write_out(generate_message)
       end
     end
 
