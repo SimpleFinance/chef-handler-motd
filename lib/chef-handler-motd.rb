@@ -31,7 +31,7 @@ class ChefMOTD < Chef::Handler
     end
 
     def delete_outdated
-      Dir.entries('.').select do |entry|
+      Dir.entries('/etc/update-motd.d').select do |entry|
         /chef-motd/.match entry && !/^#{@priority}/.match entry
       end.each do |del|
         Chef::Log.warn "Deleting #{del} as it does not match the current ChefMOTD priority"
