@@ -26,8 +26,8 @@ require 'chef/handler'
 class ChefMOTD < Chef::Handler
     attr_reader :priority
 
-    def initialize(priority = "05")
-      @priority = priority
+    def initialize(options = {:priority => '05'})
+      @priority = options[:priority]
     end
 
     def report
