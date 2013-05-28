@@ -32,7 +32,7 @@ class ChefMOTD < Chef::Handler
 
     def delete_outdated
       Dir.entries('/etc/update-motd.d').select do |entry|
-        /chef-motd/.match entry && !/^#{@priority}/.match entry
+        /chef-motd/.match(entry) && !/^#{@priority}/.match(entry)
       end.each do |del|
         Chef::Log.warn "Deleting #{del} as it does not match the current ChefMOTD priority"
         FileUtils.rm ::File.join('/etc', 'update-motd.d', del)
