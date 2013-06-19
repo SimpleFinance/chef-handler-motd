@@ -1,10 +1,10 @@
 # ChefMOTD handler
 Update your MOTD after a Chef run with various data
 
-# Prerequisites
+## Prerequisites
 Mostly, just having MOTD configured. We use Estately's [motd](https://github.com/estately/cookbooks/tree/master/motd) cookbook
 
-# Usage
+## Usage
 Either just pull the handler file into a files directory of one of your
 cookbooks, or download as a Rubygem and source it that way.
 
@@ -35,9 +35,12 @@ end
 ### Arguments
 * `priority` - Determines where the Chef data is displayed in MOTD (default 05)
 
-# Author
-Ops at Simple <ops@simple.com>
+## Questions?
+Hop on ##simple on Freenode with any questions or concerns.
 
-# License
+## Author
+Simple Finance <ops@simple.com>
+
+## License
 Apache License, Version 2.0
 
