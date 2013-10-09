@@ -24,13 +24,22 @@ require 'chef'
 require 'chef/handler'
 
 class ChefMOTD < Chef::Handler
-    attr_reader :priority
+    attr_reader :priority, :keep_old_entries
 
-    def initialize(options = {:priority => '05'})
+    def initialize(options = defaults)
       @priority = options[:priority]
+      @keep_old_entries = options[:keep_old_entries]
+    end
+
+    def defaults
+      return {
+        :priority => '05', 
+        :keep_old_entries => false
+      }
     end
 
     def delete_outdated
+      if @keep_old_entries then return end
       Dir.entries('/etc/update-motd.d').select do |entry|
         /chef-motd/.match(entry) && !/^#{@priority}/.match(entry)
       end.each do |del|
