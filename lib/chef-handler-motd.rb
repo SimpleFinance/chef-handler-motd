@@ -29,12 +29,14 @@ class ChefMOTD < Chef::Handler
     def initialize(options = defaults)
       @priority = options[:priority]
       @keep_old_entries = options[:keep_old_entries]
+      @failure_message = options[:failure_message]
     end
 
     def defaults
       return {
         :priority => '05', 
-        :keep_old_entries => false
+        :keep_old_entries => false,
+        :failure_message => false
       }
     end
 
@@ -66,11 +68,20 @@ echo \"Updated resources on last run (total: #{run_status.updated_resources.leng
       return msg
     end
 
+    def failure_message
+      return <<-eos
+#!/bin/sh
+echo \"Node #{node.name} Chef run failed at #{Time.now.to_s} in #{run_status.elapsed_time} seconds\"
+      eos
+    end
+
     def report
       if run_status.success?
         Chef::Log.info 'Updating Chef info in MOTD ...'
         delete_outdated
         write_out(generate_message)
+      else
+        if @failure_message then write_out(failure_message) end
       end
     end
 
