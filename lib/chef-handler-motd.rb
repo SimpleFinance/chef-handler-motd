@@ -30,6 +30,7 @@ class ChefMOTD < Chef::Handler
       @priority = options[:priority]
       @keep_old_entries = options[:keep_old_entries]
       @failure_message = options[:failure_message]
+      @print_resources = options[:print_resources]
     end
 
     def report
@@ -48,7 +49,8 @@ class ChefMOTD < Chef::Handler
       return {
         priority: '05', 
         keep_old_entries: false,
-        failure_message: false
+        failure_message: false,
+        print_resources: true
       }
     end
 
@@ -74,8 +76,10 @@ class ChefMOTD < Chef::Handler
 echo \"Node #{node.name} last success at #{Time.now.to_s} in #{run_status.elapsed_time} seconds\"
 echo \"Updated resources on last run (total: #{run_status.updated_resources.length}):\"
       eos
-      run_status.updated_resources.each do |res|
-        msg += "echo \"  #{res.resource_name}[#{res.name}]\"\n"
+      if @print_resources
+        run_status.updated_resources.each do |res|
+          msg += "echo \"  #{res.resource_name}[#{res.name}]\"\n"
+        end
       end
       return msg
     end
